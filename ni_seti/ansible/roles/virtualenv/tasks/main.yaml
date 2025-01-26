@@ -1,0 +1,26 @@
+- name: Update and upgrade apt packages
+  become: true
+  ansible.builtin.apt:
+    update_cache: false  # Ensure the package cache is updated
+
+- name: Assert the Python version present
+  ansible.builtin.shell:
+    cmd: "python --version 2>&1 | awk '{print $2}'"  # Extract the version number
+  register: python_version
+
+- name: Print Python version present
+  ansible.builtin.debug:
+    var: python_version.stdout
+    verbosity: 2
+
+- name: Ensure pip is installed
+  become: true
+  ansible.builtin.apt:
+    name: python3-pip
+    state: present
+
+- name: Install virtualenvwrapper using pip
+  become: true
+  ansible.builtin.pip:
+    name: virtualenvwrapper
+    state: present

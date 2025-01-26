@@ -1,0 +1,3 @@
+- hosts: my_hosts
+  roles:
+    - role: 'roles/virtualenv'
