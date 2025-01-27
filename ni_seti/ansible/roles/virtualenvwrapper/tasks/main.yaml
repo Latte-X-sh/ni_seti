@@ -1,0 +1,83 @@
+# Since we rely on bash or zsh being edited
+# We need to create our common configuration file
+- name: Create the common configuration file
+  ansible.builtin.file:
+    state: touch
+    path: "/tmp/.common-configs"
+    mode: "0644"
+
+- name: Add virtualenvwrapper configurations to the common configuration file
+  ansible.builtin.blockinfile:
+    path: /tmp/.common-configs
+    append_newline: true
+    prepend_newline: true
+    block: |
+
+      ##############################
+      # Virtualenv Wrapper configs #
+      ##############################
+      export WORKON_HOME=$HOME/.virtualenvs
+      export PROJECT_HOME=$HOME/Devel
+      source /usr/local/bin/virtualenvwrapper.sh
+
+- name: Get current Shell
+  ansible.builtin.shell:
+    cmd: "echo $SHELL"
+  register: current_shell
+
+# Introduce a block to handle both shell bash, zsh & sh
+- name: Modify your shell file to include the common configuration file
+  block:
+    - name: Add the common configuration file to the bash file
+      ansible.builtin.blockinfile:
+        path: ~/.bashrc
+        append_newline: true
+        prepend_newline: true
+        block: |
+
+          #########################
+          # BASH addition configs #
+          #########################
+          if [ -f /tmp/.common-configs ]; then
+              . /tmp/.common-configs
+          fi
+      when: current_shell.stdout == "/usr/bin/bash"
+
+    - name: Add the common configuration file to the zsh file
+      ansible.builtin.blockinfile:
+        path: ~/.zshrc
+        append_newline: true
+        prepend_newline: true
+        block: |
+
+          ########################
+          # ZSH addition configs #
+          ########################
+          if [ -f /tmp/.common-configs ]; then
+              . /tmp/.common-configs
+          fi
+      when: current_shell.stdout == "/usr/bin/zsh"
+
+- name: Update and upgrade apt packages
+  become: true
+  ansible.builtin.shell: |
+        apt update
+
+- name: Install python3-pip
+  become: true
+  ansible.builtin.shell: |
+        apt install python3-pip
+
+- name: Install virtualenvwrapper using pip
+  become: true
+  ansible.builtin.shell: |
+    python3 -m pip install virtualenvwrapper
+
+- name: Restart shell
+  become: true
+  ansible.builtin.shell: |
+    bash
+
+- name: Make a demo virtualenv env
+  ansible.builtin.shell: |
+    mkvirtualenv test_virtualenv
