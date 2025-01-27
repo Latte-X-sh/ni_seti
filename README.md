@@ -50,4 +50,29 @@ we have:
         - README.me (this file docs here!)
         - tests (at the time of reading, this is going to be a cli tool, have to test functionality)
 
-- 
+# RoadMap
+- Decided to plan this out to atleast have my desired features implemented.
+    - [x] Have atleast one role to execute a task:
+        - [ ] virtualenvwrapper (install on base python)
+        - [ ] docker
+        - [ ] python (variants)
+    - [ ] Have atleast one play that executes the role
+        - [] one playbook with single role
+        - [] one playbook with multiple roles
+        - [] one playbook with multiple roles with logic
+    - [ ] Have atleast a cli interface that executes the ansible code
+        - [] the cli interface can print a menu
+        - [] user can choose using 1 -4 what to do
+        - [] the cli can used as a one liner
+        
+- Since ansible is used in a single line arg
+- The cli will be mostly a menu driven that once it gathers all the input
+- and prompts the user to confirm, initiates ansible with all the aquired
+- inputs.
+-> The flow will look like this
+         -> one cli niti that be nested with other subcommands
+         -> niti setup dev -> should prompt you
+         -> niti
+                -> setup (setting up machines enviroment) work_env (dev)
+                -> deploy (push some data to x servers)
+                -> build (etc)
