@@ -1,0 +1,8 @@
+# packages not to commit
+
+# lock files
+uv.lock
+poetry.locl
+
+# environemnt files
+.venv
