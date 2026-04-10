@@ -1,15 +1,23 @@
-[tool.poetry]
+[project]
 name = "ni-seti"
 version = "0.1.0"
-description = "A CLI tool that allows you to easily setup your developmenent machine on the go"
-authors = ["Latte X <latteindigox@gmail.com>"]
+description = "A CLI tool that allows you to easily setup your development machine on the go"
+authors = [
+    {name = "Latte X", email = "latteindigox@gmail.com"}
+]
 readme = "README.md"
+dependencies = [
+    "ansible",
+    "click",
+    "questionary"
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-ansible = "^11.1.0"
-
+[project.scripts]
+niseti = "ni_seti.cli.main:main"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.sdist]
+include = ["ni_seti/shell_init.sh"]
